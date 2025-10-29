@@ -121,6 +121,7 @@ methyl_master <- function(input.dir            = NULL,
                           compare.files.in     = NULL,
                           compare.names        = NULL,
                           compare.olaps.size   = 1,
+                          custom.binsize       = 50000,
                           ...
                           ){
 
@@ -374,6 +375,7 @@ custom = {
                               custom.genome.version    = genome.version,
                               custom.reference         = reference,
                               custom.save.seg          = save.seg,
+                              custom.bin.size          = custom.binsize,
                               ...
   )
 
