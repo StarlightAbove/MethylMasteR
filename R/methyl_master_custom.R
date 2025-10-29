@@ -36,7 +36,7 @@ methyl_master_custom <- function(custom.idat.files.dir       = getwd(),
                                  custom.ref.version          = "hg38",
                                  custom.reference            = "internal",
                                  custom.save.seg             = FALSE,
-                                 custom.bin.size             = 50000
+                                 custom.bin.size             = 50000,
                                  ...
                       ){
 
