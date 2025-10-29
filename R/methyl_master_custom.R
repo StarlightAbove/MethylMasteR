@@ -36,6 +36,7 @@ methyl_master_custom <- function(custom.idat.files.dir       = getwd(),
                                  custom.ref.version          = "hg38",
                                  custom.reference            = "internal",
                                  custom.save.seg             = FALSE,
+                                 custom.bin.size             = 50000
                                  ...
                       ){
 
@@ -92,8 +93,9 @@ if(custom.reference=="internal"){
     sesame_seg <- foreach(i = 1:length(names(sesame_sset))) %do% {
       sesame::cnSegmentation(sesame_sset[[i]],
                             sesame_ssets_normal,
-                            refversion = custom.ref.version)
-    }
+                            refversion = custom.ref.version, 
+                            tilewidth = custom.bin.size)
+    } # Modified to expose tilewidth setting for segmentation.
     names(sesame_seg) <- names(sesame_sset)
 
     ##colnames(sesame_seg)
