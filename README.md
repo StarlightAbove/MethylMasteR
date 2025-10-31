@@ -1,5 +1,8 @@
 # MethylMasteR
+### Warning
+This is a custom build by Eliza Kishan for the Przybyl Lab. It involves exposing the bin sizing for the custom subroutine, and will be further edited to separate from the Docker installation. This may lead to unintentional build artifacts. Please use at your own risk.
 
+## Install Instructions for MethylMaster
 Michael Mariani PhD, Salas Lab, Dartmouth College 2022
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6360630.svg)](https://doi.org/10.5281/zenodo.6360630)
