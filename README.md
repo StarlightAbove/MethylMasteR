@@ -2,6 +2,15 @@
 ### Warning
 This is a custom build by Eliza Kishan for the Przybyl Lab. It involves exposing the bin sizing for the custom subroutine, and will be further edited to separate from the Docker installation. This may lead to unintentional build artifacts. Please use at your own risk.
 
+For some reason, if you wish to use this fork of the package, it requires a custom branch of "sesame", and not the default version. Please be aware that in NO WAY is there any guarantee that this will work with Conumee or Epicopy.
+
+The first step is to pull the existing docker system to establish the initial environment. Once this is set up, and RStudio login has been established:
+```r
+devtools::install_github("StarlightAbove/sesame@patch-2")
+devtools::install_github("StarlightAbove/MethylMasteR")
+```
+It is important to install the correct sesame patch.
+
 ## Install Instructions for MethylMaster
 Michael Mariani PhD, Salas Lab, Dartmouth College 2022
 
