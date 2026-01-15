@@ -11,6 +11,8 @@ devtools::install_github("StarlightAbove/MethylMasteR")
 ```
 It is important to install the correct sesame patch.
 
+**SLURM HPC WILL NOT WORK.**
+
 ## Install Instructions for MethylMaster
 Michael Mariani PhD, Salas Lab, Dartmouth College 2022
 
