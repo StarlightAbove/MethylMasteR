@@ -373,6 +373,7 @@ custom = {
                               custom.data.cache        = "EPIC",
                               custom.data.normal       = "EPIC.5.normal",
                               custom.genome.version    = genome.version,
+                              custom.ref.version       = genome.version, # methyl_master_custom() reads custom.ref.version (default "hg38"); pass the requested build through
                               custom.reference         = reference,
                               custom.save.seg          = save.seg,
                               custom.bin.size          = custom.binsize,
