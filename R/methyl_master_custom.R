@@ -45,7 +45,10 @@ custom.sample.sheet.df <- read.csv(custom.sample.sheet.path,
                                    header=TRUE,
                                    stringsAsFactors = FALSE)
 
-if(custom.reference=="internal"){
+## custom.reference: "internal" uses the SeSAMe normal reference dataset
+## (custom.data.normal); "comparison" uses the samples whose Sample_Group is
+## custom.comparison[2] in the sample sheet as the normal reference.
+if(custom.reference %in% c("internal", "comparison")){
 
     ##----------------------------------------------------------
     ##| SEnsible Step-wise Analysis of DNA MEthylation (SeSAMe)
@@ -59,7 +62,9 @@ if(custom.reference=="internal"){
     ##Loads all refs as <sesame.data.cache> defaults to "EPIC"?
     ##sesameData::sesameDataCache(sesame.data.cache)
 
-    sesame_ssets_normal <- sesameData::sesameDataGet(custom.data.normal)
+    if(custom.reference == "internal"){
+      sesame_ssets_normal <- sesameData::sesameDataGet(custom.data.normal)
+    }    
     ExperimentHub::setExperimentHubOption("CACHE", custom.idat.files.dir)
     ExperimentHub::ExperimentHub()
     ##sesameData::sesameDataCache("EPIC")
@@ -67,6 +72,12 @@ if(custom.reference=="internal"){
 
     treatment_idat_prefixes <- sesame::searchIDATprefixes(custom.idat.files.dir,
                                                         recursive=TRUE)
+    ## Keep one copy of each IDAT basename so a recursive search over a
+    ## directory holding duplicate copies does not produce duplicate samples.
+    treatment_idat_prefixes <- treatment_idat_prefixes[
+      !duplicated(gsub(".*/(?!/)", "", treatment_idat_prefixes, perl=TRUE))]
+    all_idat_prefixes <- treatment_idat_prefixes
+  
     ##sesameData::sesameDataCache("HM450")
 
     treatment.names <- custom.sample.sheet.df[
@@ -88,7 +99,38 @@ if(custom.reference=="internal"){
                             sum.TypeI = TRUE,
                             platform = treatment.platform,
                             what="sigset")
+  
+    if(custom.reference == "comparison"){
+      ## Normal reference from the sample sheet, processed identically
+      ## to the treatment samples.
+      control.names <- custom.sample.sheet.df[
+        custom.sample.sheet.df$Sample_Group %in%
+          custom.comparison[2],"Sample_Name"]
+      control_idat_prefixes <- all_idat_prefixes[gsub(".*/(?!/)",
+                                     "",
+                                     all_idat_prefixes,
+                                     perl=TRUE) %in%
+                                     control.names]
+      if(length(control_idat_prefixes) == 0){
+        stop("No IDATs found for the comparison (normal) group '",
+             custom.comparison[2], "' in ", custom.idat.files.dir)
+      }
+      control.platform <- unique(custom.sample.sheet.df[
+                                 custom.sample.sheet.df$Sample_Name %in%
+                                 control.names, "Platform"])
+      sesame_ssets_normal <- sesame::openSesame(control_idat_prefixes,
+                              mask = TRUE,
+                              sum.TypeI = TRUE,
+                              platform = control.platform,
+                              what="sigset")
+      if(is(sesame_ssets_normal, "SigSet")){
+        sesame_ssets_normal <- list(sesame_ssets_normal)
+      }
+      message("MethylMasteR custom: using ", length(sesame_ssets_normal),
+              " sample-sheet normals as the CNV reference")
+    }
 
+  
     ##sesame_seg %<-% foreach(i = 1:length(names(sesame_sset))) %do% {
     sesame_seg <- foreach(i = 1:length(names(sesame_sset))) %do% {
       sesame::cnSegmentation(sesame_sset[[i]],
