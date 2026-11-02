@@ -241,8 +241,10 @@ AutoCorrectPeak.mm <- function(object,
 
     point <- which(d$x == (max.peak.value))
 
-    QC.peak.sharpness <-
-      ((d$y[point + 20] + d$y[point - 20])/2)/d$y[which(d$x == max.peak.value)]
+     ## Clamp the +/-20 offsets to the density grid: when the peak lies within
+    ## 20 points of either edge (e.g. a flat profile with one extreme segment),
+    ## a negative index silently drops elements and the assignment below fails.
+    QC.peak.sharpness <- ((d$y[min(point + 20, length(d$y))] + d$y[max(point - 20, 1)])/2)/d$y[which(d$x == max.peak.value)]
 
     ##QC[i, "peak.sharpness"] <- as.numeric(QC.peak.sharpness)
     QC[1, "peak.sharpness"] <- as.numeric(QC.peak.sharpness)
